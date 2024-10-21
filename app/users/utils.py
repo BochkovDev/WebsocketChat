@@ -1,11 +1,11 @@
+from typing import Optional
 from datetime import datetime, timedelta, timezone
-from typing import Union
 
 from passlib.context import CryptContext
-from jose import jwt, JWTError
+from jose import jwt, JWTError, ExpiredSignatureError
 
-from core.exceptions import CredentialsException
 from core.settings import settings
+from .exceptions import TokenExpiredException, CredentialsException
 
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
@@ -23,16 +23,18 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
+    to_encode.update({'exp': expire})
     encode_jwt = jwt.encode(to_encode, key=SECRET_KEY, algorithm=ALGORITHM)
     return encode_jwt
 
 def verify_access_token(token: str) -> str:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get('sub')
-        if not username:
+        user_id: str = payload.get('sub')
+        if not user_id:
             raise CredentialsException()
-        return username
+        return user_id
+    except ExpiredSignatureError:
+        raise TokenExpiredException()
     except JWTError:
         raise CredentialsException()
