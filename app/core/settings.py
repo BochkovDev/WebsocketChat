@@ -26,7 +26,6 @@ _db = DBSettings()
 
 class TemplateSettings(BaseSettings):
     TEMPLATE_DIR: Path = APP_DIR / 'templates'
-    STATIC_DIR: Path = APP_DIR / 'static'
     AUTO_RELOAD_TEMPLATES: bool
 
     model_config = SettingsConfigDict(
@@ -62,6 +61,7 @@ class AuthSettings(BaseSettings):
 _auth = AuthSettings()
 
 class Settings(BaseSettings):
+    STATIC_DIR: Path = APP_DIR / 'static'
     SECRET_KEY: str
     DEBUG: bool
     DATABASE: DBSettings
