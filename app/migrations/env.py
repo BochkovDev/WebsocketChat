@@ -14,6 +14,8 @@ sys.path.insert(0, dirname(dirname(abspath(__file__))))
 
 from db.database import DATABASE_URL, Base
 from users.models import User
+from chat.models import Message
+from bot.models import TelegramUser
 
 
 # this is the Alembic Config object, which provides

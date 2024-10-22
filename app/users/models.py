@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from db.database import Base, str_uniq
 
@@ -9,3 +9,5 @@ class User(Base):
     password: Mapped[str]
     is_superuser: Mapped[bool] = mapped_column(default=False)
     is_active: Mapped[bool] = mapped_column(default=True)
+
+    telegram_user: Mapped['TelegramUser'] = relationship('TelegramUser', back_populates='user')

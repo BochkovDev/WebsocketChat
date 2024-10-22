@@ -24,6 +24,7 @@ class DBSettings(BaseSettings):
     )
 _db = DBSettings()
 
+
 class TemplateSettings(BaseSettings):
     TEMPLATE_DIR: Path = APP_DIR / 'templates'
     AUTO_RELOAD_TEMPLATES: bool
@@ -33,6 +34,7 @@ class TemplateSettings(BaseSettings):
         extra='ignore',
     )
 _template = TemplateSettings()
+
 
 class RedisSettings(BaseSettings):
     HOST: str
@@ -50,6 +52,7 @@ class RedisSettings(BaseSettings):
     )
 _redis = RedisSettings()
 
+
 class AuthSettings(BaseSettings):
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
@@ -59,6 +62,7 @@ class AuthSettings(BaseSettings):
         extra='ignore',
     )
 _auth = AuthSettings()
+
 
 class CelerySettings(BaseSettings):
     BROKER_URL: str
@@ -77,6 +81,7 @@ class CelerySettings(BaseSettings):
     )
 _celery = CelerySettings()
 
+
 class Settings(BaseSettings):
     STATIC_DIR: Path = APP_DIR / 'static'
     SECRET_KEY: str
@@ -91,6 +96,7 @@ class Settings(BaseSettings):
         env_file=os.path.join(ROOT_DIR, '.env', '.env'),
         extra='ignore',
     )
+
 
 settings = Settings(
     DATABASE=_db,
