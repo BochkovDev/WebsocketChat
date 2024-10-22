@@ -29,13 +29,13 @@ class BaseDAO:
         return result.scalars().all()
     
     @classmethod
-    @connection
+    @connection(commit=True)
     async def add(cls, *, session: AsyncSession, **data) -> None:
         new_instance = cls.model(**data)
         session.add(new_instance)
     
     @classmethod
-    @connection
+    @connection(commit=True)
     async def delete(cls, *, session: AsyncSession, **delete_by) -> None:
         query = sqlalchemy_delete(cls.model).where(
             func.and_(*[getattr(cls.model, k) == v for k, v in delete_by.items()])
@@ -43,7 +43,7 @@ class BaseDAO:
         await session.execute(query)
     
     @classmethod
-    @connection
+    @connection(commit=True)
     async def update(cls, *, session: AsyncSession, filter_by: dict, update_data: dict) -> None:
         query = (
             sqlalchemy_update(cls.model)
