@@ -60,6 +60,23 @@ class AuthSettings(BaseSettings):
     )
 _auth = AuthSettings()
 
+class CelerySettings(BaseSettings):
+    BROKER_URL: str
+    RESULT_BACKEND: str
+    TASK_TRACK_STARTED: bool
+    TASK_TIME_LIMIT: int
+    ACCEPT_CONTENT: str
+    RESULT_SERIALIZER: str  
+    TASK_SERIALIZER: str
+    TIMEZONE: str
+    BROKER_CONNECTION_RETRY_ON_STARTUP: bool
+
+    model_config = SettingsConfigDict(
+        env_file=os.path.join(ROOT_DIR, '.env', '.env.celery'),
+        extra='ignore',
+    )
+_celery = CelerySettings()
+
 class Settings(BaseSettings):
     STATIC_DIR: Path = APP_DIR / 'static'
     SECRET_KEY: str
@@ -68,6 +85,7 @@ class Settings(BaseSettings):
     TEMPLATES: TemplateSettings
     REDIS: RedisSettings
     AUTH: AuthSettings
+    CELERY: CelerySettings
     
     model_config = SettingsConfigDict(
         env_file=os.path.join(ROOT_DIR, '.env', '.env'),
@@ -79,4 +97,5 @@ settings = Settings(
     TEMPLATES=_template,
     REDIS=_redis,
     AUTH=_auth,
+    CELERY=_celery,
 )
