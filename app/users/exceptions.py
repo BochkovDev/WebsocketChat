@@ -9,6 +9,12 @@ class TokenExpiredException(HTTPException):
         headers = {'WWW-Authenticate': 'Bearer'} if headers is None else headers
         super().__init__(status_code, detail, headers)
 
+class TokenNotFoundException(HTTPException):
+    ''' Raises when the provided token is not found '''
+    def __init__(self, status_code: int = status.HTTP_401_UNAUTHORIZED, detail: Any = None, headers: Dict[str, str] | None = None) -> None:
+        detail = detail or 'Token not found.'
+        headers = {'WWW-Authenticate': 'Bearer'} if headers is None else headers
+        super().__init__(status_code, detail, headers)
 
 class CredentialsException(HTTPException):
     ''' Raises when can't validate user's credentials '''

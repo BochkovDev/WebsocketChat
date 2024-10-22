@@ -36,5 +36,6 @@ def verify_access_token(token: str) -> str:
         return user_id
     except ExpiredSignatureError:
         raise TokenExpiredException()
-    except JWTError:
+    except JWTError as e:
+        print(e)
         raise CredentialsException()

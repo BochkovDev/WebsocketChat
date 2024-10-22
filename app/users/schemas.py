@@ -11,3 +11,6 @@ class UserAuth(BaseModel):
     email: EmailStr = Field(..., description='Email')
     password: str = Field(..., min_length=8, max_length=50, description='Пароль')
 
+class UserRead(BaseModel):
+    id: int = Field(..., description="ID")
+    username: str = Field(..., description="Никнейм")
