@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from bot.models import TelegramUser
 from db.database import Base, str_uniq
 
 
@@ -10,4 +11,4 @@ class User(Base):
     is_superuser: Mapped[bool] = mapped_column(default=False)
     is_active: Mapped[bool] = mapped_column(default=True)
 
-    telegram_user: Mapped['TelegramUser'] = relationship('TelegramUser', back_populates='user')
+    telegram_user: Mapped['TelegramUser'] = relationship('TelegramUser', uselist=False, back_populates='user')
