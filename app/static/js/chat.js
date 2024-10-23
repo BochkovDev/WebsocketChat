@@ -101,13 +101,15 @@ function connectWebSocket() {
     if (socket) socket.close(); 
 
     socket = new WebSocket(`ws://${window.location.host}/chat/ws/${selectedUserId}`);  
-    console.log(socket)
 
     socket.onopen = () => console.log('WebSocket соединение установлено');  
+    console.log('My ID is ', currentUserId)
+    console.log('Selected User ID is ', selectedUserId)
 
     socket.onmessage = (event) => {
         const incomingMessage = JSON.parse(event.data);  
         if (incomingMessage.recipient_id === currentUserId) {  
+            console.log('Incoming message: ', incomingMessage.content, incomingMessage.recipient_id)
             addMessage(incomingMessage.content, incomingMessage.recipient_id);  
         }
     };
@@ -139,15 +141,18 @@ async function sendMessage() {
 }
 
 function addMessage(text, recipient_id) {
+    console.log('func addMessage: recipient_id=', recipient_id)
     const messagesContainer = document.getElementById('messages');
     messagesContainer.insertAdjacentHTML('beforeend', createMessageElement(text, recipient_id));  
     messagesContainer.scrollTop = messagesContainer.scrollHeight;  
 }
 
 function createMessageElement(text, recipient_id) {
-    const userID = parseInt(selectedUserId, 10);  
-    const messageClass = userID === recipient_id ? 'my-message' : 'other-message';  
-    return `<div class="message ${messageClass}">${text}</div>`;  
+    console.log('func createMessageElement: recipient_id=', recipient_id)
+    const userID = parseInt(selectedUserId, 10);
+    console.log('func createMessageElement: userID=', userID)
+    const messageClass = userID == recipient_id ? 'my-message' : 'other-message';  
+    return `<div class="message ${messageClass}">${text}</div>`; 
 }
 
 document.querySelectorAll('.user-item').forEach(item => {

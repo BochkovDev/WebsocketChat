@@ -83,12 +83,12 @@ body {
     border-radius: 5px;
     max-width: 70%;
 }
-.my-message {
+.other-message{
     background-color: #dcf8c6;
     align-self: flex-end;
     margin-left: auto;
 }
-.other-message {
+.my-message {
     background-color: #f2f2f2;
 }
 .input-area {

@@ -33,23 +33,22 @@ async def chat(request: Request, user: User = Depends(get_current_user)):
 
 @router.post('/messages', response_model=MessageCreate)
 async def send_message(message: MessageCreate, current_user: User = Depends(get_current_user)):
-    message_data = message.model_dump()
-    message_data['sender_id'] = current_user.id
-    await MessagesDAO.add(**message_data)
+    await MessagesDAO.add(
+        sender_id=current_user.id,
+        content=message.content,
+        recipient_id=message.recipient_id,
+    )
 
-    message_data = await prepare_message(sender_id=current_user.id, recipient_id=message.recipient_id, content=message.content)
+    message_data = {
+        'sender_id': current_user.id,
+        'recipient_id': message.recipient_id,
+        'content': message.content,
+    }
 
-    is_notified = await notify_user(message.recipient_id, message_data)
-    if not is_notified:
-        send_telegram_notification_task.delay(message.recipient_id, current_user.username)
+    await notify_user(message.recipient_id, message_data)
     await notify_user(current_user.id, message_data)
 
-    return {
-        'recipient_id': message.recipient_id, 
-        'content': message.content, 
-        'status': 'ok', 
-        'message': 'Сообщение успешно сохранено!'
-    }
+    return {'recipient_id': message.recipient_id, 'content': message.content, 'status': 'ok', 'msg': 'Message saved!'}
 
 @router.get('/messages/{user_id}', response_model=List[MessageRead])
 async def messages(user_id: int, current_user: User = Depends(get_current_user)):
