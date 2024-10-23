@@ -16,6 +16,16 @@ services:
       - db
       - redis
 
+  bot:
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    image: 'chitchat.bot'
+    command: ["python", "main_bot.py"]
+    container_name: 'chitchat.bot'
+    depends_on:
+      - app
+
   redis:
     image: redis:7
     container_name: 'chitchat.redis'
@@ -42,8 +52,10 @@ services:
       context: .
       dockerfile: ./docker/app/Dockerfile
     image: 'chitchat.celery'
-    command: ["celery", "-A", "core", "worker", "--loglevel=info"]
+    command: ["celery", "-A", "core.celery", "worker", "--loglevel=info"]
     container_name: 'chitchat.celery'
+    environment:
+      - PYTHONPATH=/usr/src/chitchat/app
     tty: true
     volumes:
       - ./app:/usr/src/chitchat/app
