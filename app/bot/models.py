@@ -7,6 +7,6 @@ from db.database import Base, str_uniq
 
 class TelegramUser(Base):
     telegram_id: Mapped[int] = mapped_column(Integer, unique=True)
-    user_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'))
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), unique=True)
 
-    user: Mapped['User'] = relationship('User', back_populates='telegram_user')
+    user: Mapped['User'] = relationship(back_populates='telegram_user', single_parent=True)
