@@ -15,7 +15,7 @@
 
 ## Технологии
 
-- Язык программирования: Python 3.10 или новее
+- Язык программирования: Python 3.12
 - Фреймворк: FastAPI
 - База данных: PostgreSQL
 - Кэширование и хранение сессий: Redis
@@ -62,9 +62,6 @@
 │   │   ├── env.py
 │   │   ├── README
 │   │   ├── script.py.mako
-│   │   └── versions
-│   │       ├── 2be45b7ddd1e_edited_models_telegramuser_user.py
-│   │       └── d57c05ac27f5_initial_commit.py
 │   ├── services
 │   │   ├── __init__.py
 │   │   ├── tasks.py
@@ -100,3 +97,38 @@
 ├── docker-compose.yaml
 ├── README.md
 └── requirements.txt
+
+## Установка
+
+1. **Клонируйте репозиторий**:
+   ```bash
+   git clone git@github.com:BochkovDev/WebsocketChat.git
+   cd WebsocketChat
+   ```
+
+2. **Настройте окружение `.env/` по свою систему или оставьте как есть**:
+   ```plaintext
+   SECRET_KEY=your_secret_key
+   AUTH_ALGORITHM=your_algorithm
+   ACCESS_TOKEN_EXPIRE_MINUTES=your_expiry_time
+   ```
+   
+3. **Настройте Docker и Docker Compose**:
+   Убедитесь, что у вас установлены Docker и Docker Compose. Затем запустите проект с помощью Docker:
+   ```bash
+   docker compose up --build
+   ```
+   
+4. **Создайте базу данных**:
+   ```bash
+   docker exec -it chitchat.db psql -U postgres(`.env/.env.db:USER`)
+   postgres(your_db_user)=# CREATE DATABASE chitchat(`.env/.env.db:NAME`)
+   postgres(your_db_user)=# \l --- Проверьте создания базы данных
+   ```
+
+## Запуск
+
+После настройки и установки вы можете запустить приложение, используя Docker Compose. Откройте браузер и перейдите по адресу:
+```
+http://localhost:8000
+```
