@@ -12,7 +12,6 @@ from services.tasks import send_telegram_notification_task
 from main_bot import notify_user
 from .dao import MessagesDAO
 from .schemas import MessageRead, MessageCreate
-from .utils import prepare_message
 
 
 router = APIRouter(prefix='/chat', tags=['Chat'])
@@ -45,7 +44,9 @@ async def send_message(message: MessageCreate, current_user: User = Depends(get_
         'content': message.content,
     }
 
-    await notify_user(message.recipient_id, message_data)
+    is_notified = await notify_user(message.recipient_id, message_data)
+    if not is_notified:
+        send_telegram_notification_task.delay(message.recipient_id, current_user.username)
     await notify_user(current_user.id, message_data)
 
     return {'recipient_id': message.recipient_id, 'content': message.content, 'status': 'ok', 'msg': 'Message saved!'}

@@ -37,17 +37,20 @@ class BaseDAO:
     @classmethod
     @connection(commit=True)
     async def delete(cls, *, session: AsyncSession, **delete_by) -> None:
-        query = sqlalchemy_delete(cls.model).where(
-            func.and_(*[getattr(cls.model, k) == v for k, v in delete_by.items()])
-        )
-        await session.execute(query)
+        conditions = [getattr(cls.model, k) == v for k, v in delete_by.items()]
+
+        if conditions:
+            query = sqlalchemy_delete(cls.model).where(*conditions)
+            await session.execute(query)
     
     @classmethod
     @connection(commit=True)
     async def update(cls, *, session: AsyncSession, filter_by: dict, update_data: dict) -> None:
-        query = (
-            sqlalchemy_update(cls.model)
-            .where(func.and_(*[getattr(cls.model, k) == v for k, v in filter_by.items()]))
-            .values(**update_data)
-        )
-        await session.execute(query)
+        conditions = [getattr(cls.model, k) == v for k, v in filter_by.items()]
+        if conditions:
+            query = (
+                sqlalchemy_update(cls.model)
+                .where(*conditions)
+                .values(**update_data)
+            )
+            await session.execute(query)

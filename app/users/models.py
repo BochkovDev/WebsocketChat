@@ -10,5 +10,6 @@ class User(Base):
     password: Mapped[str]
     is_superuser: Mapped[bool] = mapped_column(default=False)
     is_active: Mapped[bool] = mapped_column(default=True)
+    is_verified: Mapped[bool] = mapped_column(default=False)
 
     telegram_user: Mapped['TelegramUser'] = relationship('TelegramUser', uselist=False, back_populates='user')

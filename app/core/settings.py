@@ -25,6 +25,21 @@ class DBSettings(BaseSettings):
 _db = DBSettings()
 
 
+class SMTPSettings(BaseSettings):
+    HOST: str
+    PORT: int
+    USER: str
+    PASSWORD: str
+    USE_TLS: bool
+    DEFAULT_FROM_EMAIL: str
+
+    model_config = SettingsConfigDict(
+        env_file=os.path.join(ROOT_DIR, '.env', '.env.smtp'),
+        extra='ignore',
+    )
+_smtp = SMTPSettings()
+
+
 class TemplateSettings(BaseSettings):
     TEMPLATE_DIR: Path = APP_DIR / 'templates'
     AUTO_RELOAD_TEMPLATES: bool
@@ -91,6 +106,7 @@ class Settings(BaseSettings):
     REDIS: RedisSettings
     AUTH: AuthSettings
     CELERY: CelerySettings
+    SMTP: SMTPSettings
     
     model_config = SettingsConfigDict(
         env_file=os.path.join(ROOT_DIR, '.env', '.env'),
@@ -104,4 +120,5 @@ settings = Settings(
     REDIS=_redis,
     AUTH=_auth,
     CELERY=_celery,
+    SMTP=_smtp,
 )
