@@ -97,6 +97,7 @@
 ├── docker-compose.yaml
 ├── README.md
 └── requirements.txt
+```
 
 ## Установка
 
@@ -121,9 +122,9 @@
    
 4. **Создайте базу данных**:
    ```bash
-   docker exec -it chitchat.db psql -U postgres(`.env/.env.db:USER`)
-   postgres(your_db_user)=# CREATE DATABASE chitchat(`.env/.env.db:NAME`)
-   postgres(your_db_user)=# \l --- Проверьте создания базы данных
+   docker exec -it chitchat.db psql -U postgres(`.env/.env.db::USER`)
+   postgres(your_db_user)=# CREATE DATABASE chitchat(`.env/.env.db::NAME`)
+   postgres(your_db_user)=# \l --- Проверьте создание базы данных
    ```
 
 ## Запуск
