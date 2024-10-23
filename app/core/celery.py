@@ -18,4 +18,4 @@ app.conf.update(
     broker_connection_retry_on_startup=settings.CELERY.BROKER_CONNECTION_RETRY_ON_STARTUP,
 )
 
-app.autodiscover_tasks()
+app.autodiscover_tasks(['services'])

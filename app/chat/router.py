@@ -7,8 +7,9 @@ from fastapi.responses import HTMLResponse
 from core.jinja2 import templates
 from users.models import User
 from users.dao import UsersDAO
-from users.schemas import UserRead as SUserRead
 from users.dependencies import get_current_user
+from services.tasks import send_telegram_notification_task
+from main_bot import notify_user
 from .dao import MessagesDAO
 from .schemas import MessageRead, MessageCreate
 from .utils import prepare_message
@@ -18,11 +19,12 @@ router = APIRouter(prefix='/chat', tags=['Chat'])
 active_connections: Dict[int, WebSocket] = {}
 
 
-async def notify_user(user_id: int, message: dict):
+async def notify_user(user_id: int, message: dict) -> bool:
     if user_id in active_connections:
         websocket = active_connections[user_id]
         await websocket.send_json(message)
-
+        return True
+    return False
 
 @router.get('/', response_class=HTMLResponse, summary='Chat Page')
 async def chat(request: Request, user: User = Depends(get_current_user)):
@@ -37,7 +39,9 @@ async def send_message(message: MessageCreate, current_user: User = Depends(get_
 
     message_data = await prepare_message(sender_id=current_user.id, recipient_id=message.recipient_id, content=message.content)
 
-    await notify_user(message.recipient_id, message_data)
+    is_notified = await notify_user(message.recipient_id, message_data)
+    if not is_notified:
+        send_telegram_notification_task.delay(message.recipient_id, current_user.username)
     await notify_user(current_user.id, message_data)
 
     return {
