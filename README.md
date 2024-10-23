@@ -127,6 +127,15 @@
    postgres(your_db_user)=# \l --- Проверьте создание базы данных
    ```
 
+5. **Мигрируйте базу данных**:
+   ```bash
+   docker exec -it chitchat.app bash
+   root@:/usr/src/chitchat/app# cd ..
+   root@:/usr/src/chitchat# mkdir ./app/migrations/versions
+   root@:/usr/src/chitchat# alembic revision --autogenerate -m 'Initial revision'
+   root@:/usr/src/chitchat# alembic upgrade head
+   ```
+
 ## Запуск
 
 После настройки и установки вы можете запустить приложение, используя Docker Compose. Откройте браузер и перейдите по адресу:
